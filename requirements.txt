@@ -2,3 +2,5 @@ langchain
 langgraph
 python-dotenv
 langchain-google-genai
+streamlit
+ddgs
