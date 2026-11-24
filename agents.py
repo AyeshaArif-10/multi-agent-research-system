@@ -10,10 +10,11 @@ load_dotenv()
 
 # Model setup
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3.1-flash-lite",
+    model="gemini-3.5-flash",
     temperature=0,
     timeout=60,
     max_retries=3
+
 )
 
 
