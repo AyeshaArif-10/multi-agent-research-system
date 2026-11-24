@@ -32,10 +32,9 @@ def scrape_url(url: str) -> str:
         return f"Could not scrape URL: {str(e)}"
 '''
 
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 import requests
 from bs4 import BeautifulSoup
-
 
 
 from ddgs import DDGS
