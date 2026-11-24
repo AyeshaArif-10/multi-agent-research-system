@@ -107,34 +107,33 @@ def run_pipeline_ui(topic: str):
 
     # STEP 1: SEARCH
 
+
+    # STEP 1: SEARCH
+    # Direct DuckDuckGo search without Gemini
+
     with st.status(
-        "🔍 Step 1 — Search Agent is searching...",
+        "🔍 Step 1 — Searching the web...",
         expanded=True
     ) as status:
 
         try:
 
-            st.write("Building Search Agent...")
+            st.write("Searching DuckDuckGo...")
 
-            search_agent = build_search_agent()
+            search_results = web_search(topic)
 
-            st.write("Searching for information. Please wait...")
+            if (
+                not search_results
+                or search_results.startswith("Web search failed:")
+                or search_results.startswith("No search results")
+            ):
+                raise ValueError(
+                    f"Search failed: {search_results}"
+                )
 
-            search_result = search_agent.invoke(
-                {
-                    "messages": [
-                        (
-                            "user",
-                            f"Find recent, reliable and detailed information about: {topic}",
-                        )
-                    ]
-                }
-            )
+            state["search_results"] = search_results
 
-            state["search_results"] = last_message_text(
-                search_result,
-                "Search Agent"
-            )
+            st.write("Search results collected successfully.")
 
             status.update(
                 label="✅ Step 1 — Search complete",
@@ -145,15 +144,16 @@ def run_pipeline_ui(topic: str):
         except Exception:
 
             status.update(
-                label="❌ Step 1 — Search Agent failed",
+                label="❌ Step 1 — Search failed",
                 state="error"
             )
 
             st.code(traceback.format_exc())
 
-            return {"error": "Search Agent failed."}
+            return {"error": "Search failed."}
 
     progress.progress(25, text="Search complete")
+
 
     # STEP 2: READER
     # Direct webpage scraping without Gemini
