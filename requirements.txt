@@ -1,7 +1,8 @@
+streamlit
 langchain
 langgraph
-python-dotenv
 langchain-google-genai
-streamlit
+python-dotenv
 ddgs
-duckduckgo-search
+requests
+beautifulsoup4
