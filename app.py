@@ -8,6 +8,7 @@ Run with:
 
 import time
 import traceback
+import re
 
 import streamlit as st
 
@@ -155,32 +156,56 @@ def run_pipeline_ui(topic: str):
     progress.progress(25, text="Search complete")
 
     # STEP 2: READER
+    # Direct webpage scraping without Gemini
 
     with st.status(
-        "📄 Step 2 — Reader Agent is scraping resources...",
+        "📄 Step 2 — Reader is scraping resources...",
         expanded=True
     ) as status:
 
         try:
 
-            reader_agent = build_reader_agent()
+            st.write("Extracting URLs from search results...")
 
-            reader_result = reader_agent.invoke(
-                {
-                    "messages": [
-                        (
-                            "user",
-                            f"Based on the following search results about '{topic}', "
-                            f"identify a relevant URL and scrape it for detailed content.\n\n"
-                            f"Search Results:\n{state['search_results'][:800]}",
-                        )
-                    ]
-                }
+            urls = re.findall(
+                r'https?://[^\s<>"\']+',
+                state["search_results"]
             )
 
-            state["scraped_content"] = last_message_text(
-                reader_result,
-                "Reader Agent"
+            # Remove duplicate URLs
+            urls = list(dict.fromkeys(urls))
+
+            if not urls:
+                raise ValueError(
+                    "No URLs found in the search results."
+                )
+
+            scraped_pages = []
+
+            # Scrape up to three webpages
+            for url in urls[:3]:
+
+                st.write(f"Scraping: {url}")
+
+                content = scrape_url(url)
+
+                if (
+                    content
+                    and not content.startswith("Webpage reading failed:")
+                ):
+
+                    scraped_pages.append(
+                        f"SOURCE: {url}\n\n{content}"
+                    )
+
+            if not scraped_pages:
+
+                raise ValueError(
+                    "Could not scrape any webpage from the search results."
+                )
+
+            state["scraped_content"] = "\n\n".join(
+                scraped_pages
             )
 
             status.update(
@@ -192,13 +217,13 @@ def run_pipeline_ui(topic: str):
         except Exception:
 
             status.update(
-                label="❌ Step 2 — Reader Agent failed",
+                label="❌ Step 2 — Reader failed",
                 state="error"
             )
 
             st.code(traceback.format_exc())
 
-            return {"error": "Reader Agent failed."}
+            return {"error": "Reader failed."}
 
     progress.progress(50, text="Scraping complete")
 
@@ -308,7 +333,7 @@ with st.sidebar:
     st.markdown(
         """
 1. **Search Agent** finds recent sources
-2. **Reader Agent** scrapes a relevant page
+2. **Reader** extracts webpage content
 3. **Writer** drafts the report
 4. **Critic** reviews the report
         """
@@ -332,7 +357,9 @@ with st.sidebar:
 
 st.title("Multi-Agent Research System")
 
-st.write("Enter a topic and let the agents do the research for you.")
+st.write(
+    "Enter a topic and let the agents do the research for you."
+)
 
 
 # ----------------------------------------------------------------------------
@@ -458,7 +485,7 @@ if st.button("Test Search Agent"):
 
 
 # ----------------------------------------------------------------------------
-# TEMPORARY TEST 5: WEBPAGE SCRAPER (WITHOUT GEMINI)
+# TEMPORARY TEST 5: WEBPAGE SCRAPER
 # ----------------------------------------------------------------------------
 
 if st.button("Test Webpage Scraper"):
@@ -649,3 +676,4 @@ if results:
         file_name="research_full_output.md",
         mime="text/markdown",
     )
+
