@@ -20,19 +20,19 @@ Built with **Python, Streamlit, LangChain, LangGraph, and Google Gemini**, this 
 
 The application displays the progress of all four stages and indicates when the pipeline completes successfully.
 
-![Research Workflow](screenshots/workflow.png)
+![Research Workflow](screenshots/Research_Workflow.png)
 
 ### 3. Generated Research Report
 
 The Writer stage generates a structured research report based on the information collected during the research process.
 
-![Final Research Report](screenshots/final_report.png)
+![Final Research Report](screenshots/Generated_Research_Report.png)
 
 ### 4. Critic Feedback
 
 The Critic evaluates the generated report and provides a score along with feedback about its strengths and areas for improvement.
 
-![Critic Feedback](screenshots/critic_feedback.png)
+![Critic Feedback](screenshots/Critic_Feedback.png)
 
 ---
 
@@ -219,7 +219,7 @@ pip install -r requirements.txt
 GOOGLE_API_KEY=your_gemini_api_key
 ```
 
-**Important:** Never upload your API key or `.env` file to GitHub.
+
 
 ### 6. Run the Application
 
