@@ -151,4 +151,157 @@ The application follows a sequential four-stage workflow.
 multi-agent-research-system/
 │
 ├── app.py              # Streamlit application and research workflow
-├──
+├── agents.py           # Gemini model, agents, writer and critic chains
+├── tools.py            # Web search and webpage scraping tools
+├── pipeline.py         # Research pipeline components
+├── requirements.txt    # Project dependencies
+├── screenshots/        # Application screenshots
+│   ├── homepage.png
+│   ├── workflow.png
+│   ├── final_report.png
+│   └── critic_feedback.png
+├── .env                # API key configuration (not committed)
+└── README.md           # Project documentation
+```
+
+---
+
+## 🚀 Installation and Setup
+
+Follow these steps to run the application locally.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/AyeshaArif-10/multi-agent-research-system.git
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
+cd multi-agent-research-system
+```
+
+### 3. Create a Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Activate it:
+
+**Windows:**
+
+```bash
+venv\Scripts\activate
+```
+
+**Mac/Linux:**
+
+```bash
+source venv/bin/activate
+```
+
+### 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Configure the Gemini API Key
+
+1. Visit [Google AI Studio](https://aistudio.google.com/).
+2. Generate a Gemini API key.
+3. Create a `.env` file in the project directory.
+4. Add your API key:
+
+```env
+GOOGLE_API_KEY=your_gemini_api_key
+```
+
+**Important:** Never upload your API key or `.env` file to GitHub.
+
+### 6. Run the Application
+
+```bash
+streamlit run app.py
+```
+
+The application will open in your browser.
+
+---
+
+## 💡 Example Usage
+
+1. Open the Multi-Agent Research System.
+2. Enter a research topic.
+3. Click the **Run Research** button.
+4. Follow the progress of the four stages.
+5. View the generated research report.
+6. Explore the Critic Feedback, Search Results, and Scraped Content tabs.
+7. Download the generated report.
+
+**Example research topics:**
+
+- Effect of War on Stock Markets
+- Applications of Artificial Intelligence in Healthcare
+- Impact of Generative AI on Education
+- Recent Developments in Renewable Energy
+
+---
+
+## 🧪 Development and Testing
+
+The application includes individual diagnostic buttons to test important components.
+
+These tests help verify:
+
+- Gemini API connectivity.
+- Gemini tool calling.
+- DuckDuckGo search functionality.
+- Search Agent functionality.
+- Webpage scraping.
+- Reader Agent functionality.
+
+This makes it easier to identify and troubleshoot issues in individual components.
+
+---
+
+## 🎯 Learning Outcomes
+
+Through this project, I gained practical experience in:
+
+- Understanding multi-agent AI workflows.
+- Working with LangChain and LangGraph.
+- Integrating Google Gemini with Python applications.
+- Implementing web search and webpage scraping.
+- Extracting and processing webpage content.
+- Building LLM-powered report generation and evaluation chains.
+- Handling API failures using retry mechanisms.
+- Developing interactive applications using Streamlit.
+- Deploying Python applications using Streamlit Community Cloud.
+
+---
+
+## 🔮 Future Improvements
+
+- Implement source citations and reference tracking.
+- Add a fact-checking stage to validate important claims.
+- Improve report formatting and customization.
+- Support PDF report generation.
+- Add research history and session management.
+- Explore more advanced agent orchestration strategies.
+
+---
+
+## 👩‍💻 Author
+
+**Ayesha Arif**
+
+B.Tech – Electronics and Communication Engineering
+
+GitHub: [AyeshaArif-10](https://github.com/AyeshaArif-10)
+
+---
+
+⭐ If you find this project interesting, consider giving the repository a star!
