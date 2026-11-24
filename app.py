@@ -11,7 +11,7 @@ import time
 import traceback
  
 import streamlit as st
- 
+from tools import web_search
 from agents import (
     build_reader_agent,
     build_search_agent,
@@ -207,6 +207,25 @@ if st.button("Test Gemini API"):
 
     except Exception as e:
         st.error(f"Gemini API failed: {type(e).__name__}: {str(e)}")
+     # Temporary Gemini Tool Calling Test
+if st.button("Test Gemini Tool Calling"):
+    try:
+        with st.spinner("Testing Gemini tool calling..."):
+            llm_with_tools = llm.bind_tools([web_search])
+
+            response = llm_with_tools.invoke(
+                "Search the web for the latest developments in artificial intelligence."
+            )
+
+        st.success("Gemini tool calling is working!")
+        st.write(response.content)
+
+        if response.tool_calls:
+            st.write("Tool calls detected:")
+            st.write(response.tool_calls)
+
+    except Exception as e:
+        st.error(f"Tool calling failed: {type(e).__name__}: {str(e)}")
  
 with st.form("research_form", clear_on_submit=False):
     topic_input = st.text_input(
