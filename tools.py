@@ -1,4 +1,3 @@
-```python
 from ddgs import DDGS
 import requests
 from bs4 import BeautifulSoup
@@ -86,4 +85,4 @@ def scrape_url(url: str) -> str:
 
     except Exception as e:
         return f"Webpage reading failed: {str(e)}"
-```
+
