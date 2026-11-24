@@ -1,3 +1,4 @@
+
 """
 Streamlit UI for the Multi-Agent Research System.
 
@@ -18,7 +19,7 @@ from agents import (
     llm,
 )
 
-from tools import web_search
+from tools import web_search, scrape_url
 
 
 # ----------------------------------------------------------------------------
@@ -103,10 +104,12 @@ def run_pipeline_ui(topic: str):
 
     progress = st.progress(0, text="Starting pipeline...")
 
-
     # STEP 1: SEARCH
 
-    with st.status("🔍 Step 1 — Search Agent is searching...", expanded=True) as status:
+    with st.status(
+        "🔍 Step 1 — Search Agent is searching...",
+        expanded=True
+    ) as status:
 
         try:
 
@@ -151,10 +154,12 @@ def run_pipeline_ui(topic: str):
 
     progress.progress(25, text="Search complete")
 
-
     # STEP 2: READER
 
-    with st.status("📄 Step 2 — Reader Agent is scraping resources...", expanded=True) as status:
+    with st.status(
+        "📄 Step 2 — Reader Agent is scraping resources...",
+        expanded=True
+    ) as status:
 
         try:
 
@@ -197,10 +202,12 @@ def run_pipeline_ui(topic: str):
 
     progress.progress(50, text="Scraping complete")
 
-
     # STEP 3: WRITER
 
-    with st.status("✍️ Step 3 — Writer is drafting the report...", expanded=True) as status:
+    with st.status(
+        "✍️ Step 3 — Writer is drafting the report...",
+        expanded=True
+    ) as status:
 
         try:
 
@@ -239,10 +246,12 @@ def run_pipeline_ui(topic: str):
 
     progress.progress(75, text="Report drafted")
 
-
     # STEP 4: CRITIC
 
-    with st.status("🧐 Step 4 — Critic is reviewing the report...", expanded=True) as status:
+    with st.status(
+        "🧐 Step 4 — Critic is reviewing the report...",
+        expanded=True
+    ) as status:
 
         try:
 
@@ -409,11 +418,18 @@ if st.button("Test DuckDuckGo Search"):
         )
 
 
+# ----------------------------------------------------------------------------
+# TEMPORARY TEST 4: SEARCH AGENT
+# ----------------------------------------------------------------------------
+
 if st.button("Test Search Agent"):
+
     try:
+
         search_agent = build_search_agent()
 
         with st.spinner("Inspecting Search Agent execution..."):
+
             for step in search_agent.stream(
                 {
                     "messages": [
@@ -426,17 +442,70 @@ if st.button("Test Search Agent"):
                 config={"recursion_limit": 10},
                 stream_mode="updates"
             ):
+
                 st.write("Execution step:")
                 st.write(step)
 
         st.success("Search Agent execution finished!")
 
     except Exception as e:
-        st.error(f"Search Agent failed: {type(e).__name__}: {str(e)}")
+
+        st.error(
+            f"Search Agent failed: {type(e).__name__}: {str(e)}"
+        )
+
         st.code(traceback.format_exc())
-if st.button("Test Reader Agent"):
+
+
+# ----------------------------------------------------------------------------
+# TEMPORARY TEST 5: WEBPAGE SCRAPER (WITHOUT GEMINI)
+# ----------------------------------------------------------------------------
+
+if st.button("Test Webpage Scraper"):
+
     try:
+
+        with st.spinner("Scraping webpage..."):
+
+            result = scrape_url(
+                "https://www.ibm.com/think/news/ai-tech-trends-2026"
+            )
+
+        if result.startswith("Webpage reading failed:"):
+
+            st.error(result)
+
+        elif not result.strip():
+
+            st.warning("The scraper returned empty content.")
+
+        else:
+
+            st.success("Webpage scraper is working!")
+
+            st.write("Extracted webpage content:")
+
+            st.text(result[:3000])
+
+    except Exception as e:
+
+        st.error(
+            f"Scraper failed: {type(e).__name__}: {str(e)}"
+        )
+
+        st.code(traceback.format_exc())
+
+
+# ----------------------------------------------------------------------------
+# TEMPORARY TEST 6: READER AGENT
+# ----------------------------------------------------------------------------
+
+if st.button("Test Reader Agent"):
+
+    try:
+
         with st.spinner("Testing Reader Agent..."):
+
             reader_agent = build_reader_agent()
 
             result = reader_agent.invoke(
@@ -453,11 +522,18 @@ if st.button("Test Reader Agent"):
             )
 
         st.success("Reader Agent completed!")
+
         st.write(result)
 
     except Exception as e:
-        st.error(f"Reader Agent failed: {type(e).__name__}: {str(e)}")
+
+        st.error(
+            f"Reader Agent failed: {type(e).__name__}: {str(e)}"
+        )
+
         st.code(traceback.format_exc())
+
+
 # ----------------------------------------------------------------------------
 # RESEARCH FORM
 # ----------------------------------------------------------------------------
