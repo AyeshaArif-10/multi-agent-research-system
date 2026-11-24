@@ -17,6 +17,8 @@ from agents import (
     build_search_agent,
     writer_chain,
     critic_chain,
+    llm,
+
 )
  
 # ----------------------------------------------------------------------------
@@ -194,6 +196,17 @@ with st.sidebar:
 # ----------------------------------------------------------------------------
 st.title("Multi-Agent Research System")
 st.write("Enter a topic and let the agents do the research for you.")
+# Temporary Gemini API test
+if st.button("Test Gemini API"):
+    try:
+        with st.spinner("Testing Gemini connection..."):
+            response = llm.invoke("Explain artificial intelligence in one sentence.")
+
+        st.success("Gemini API is working!")
+        st.write(response.content)
+
+    except Exception as e:
+        st.error(f"Gemini API failed: {type(e).__name__}: {str(e)}")
  
 with st.form("research_form", clear_on_submit=False):
     topic_input = st.text_input(
