@@ -26,7 +26,7 @@ The application displays the progress of all four stages and indicates when the 
 
 The Writer stage generates a structured research report based on the information collected during the research process.
 
-![Final Research Report](screenshots/Final_Report.png)
+![Final Research Report](screenshots/Final_Research_Report.png)
 
 ### 4. Critic Feedback
 
