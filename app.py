@@ -20,7 +20,7 @@ from agents import (
     llm,
 
 )
- 
+from tools import web_search
 # ----------------------------------------------------------------------------
 # Page config
 # ----------------------------------------------------------------------------
@@ -226,6 +226,20 @@ if st.button("Test Gemini Tool Calling"):
 
     except Exception as e:
         st.error(f"Tool calling failed: {type(e).__name__}: {str(e)}")
+     Temporary DuckDuckGo Search Test
+
+if st.button("Test DuckDuckGo Search"):
+try:
+with st.spinner("Searching DuckDuckGo..."):
+result = web_search(
+"latest developments in artificial intelligence 2026"
+)
+
+    st.success("DuckDuckGo search completed!")
+    st.text(result)
+
+except Exception as e:
+    st.error(f"Search failed: {type(e).__name__}: {str(e)}")
  
 with st.form("research_form", clear_on_submit=False):
     topic_input = st.text_input(
