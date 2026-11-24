@@ -227,6 +227,7 @@ def run_pipeline_ui(topic: str):
 
     progress.progress(50, text="Scraping complete")
 
+   
     # STEP 3: WRITER
 
     with st.status(
@@ -241,12 +242,40 @@ def run_pipeline_ui(topic: str):
                 f"DETAILED SCRAPED CONTENT:\n{state['scraped_content']}"
             )
 
-            report = writer_chain.invoke(
-                {
-                    "topic": topic,
-                    "research": state["research"]
-                }
-            )
+            # Retry Writer if Gemini is temporarily unavailable
+
+            report = None
+
+            for attempt in range(3):
+
+                try:
+                    report = writer_chain.invoke(
+                        {
+                            "topic": topic,
+                            "research": state["research"]
+                        }
+                    )
+                    break
+
+                except Exception as e:
+
+                    if "503" in str(e) or "UNAVAILABLE" in str(e):
+
+                        if attempt < 2:
+                            wait_time = 5 * (attempt + 1)
+
+                            st.warning(
+                                f"Gemini is temporarily busy. "
+                                f"Retrying in {wait_time} seconds..."
+                            )
+
+                            time.sleep(wait_time)
+
+                        else:
+                            raise
+
+                    else:
+                        raise
 
             state["report"] = to_text(
                 getattr(report, "content", report)
@@ -270,6 +299,7 @@ def run_pipeline_ui(topic: str):
             return {"error": "Writer failed."}
 
     progress.progress(75, text="Report drafted")
+
 
     # STEP 4: CRITIC
 
