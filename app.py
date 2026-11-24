@@ -408,7 +408,26 @@ if st.button("Test DuckDuckGo Search"):
             f"Search failed: {type(e).__name__}: {str(e)}"
         )
 
+if st.button("Test Search Agent"):
+    try:
+        with st.spinner("Testing Search Agent..."):
+            search_agent = build_search_agent()
 
+            result = search_agent.invoke(
+                {
+                    "messages": [
+                        ("user", "Search for recent developments in artificial intelligence.")
+                    ]
+                },
+                config={"recursion_limit": 5}
+            )
+
+        st.success("Search Agent completed!")
+        st.write(result)
+
+    except Exception as e:
+        st.error(f"Search Agent failed: {type(e).__name__}: {str(e)}")
+        st.code(traceback.format_exc())
 # ----------------------------------------------------------------------------
 # RESEARCH FORM
 # ----------------------------------------------------------------------------
