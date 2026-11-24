@@ -396,7 +396,7 @@ st.write(
 # TEMPORARY TEST 1: GEMINI API
 # ----------------------------------------------------------------------------
 
-'''if st.button("Test Gemini API"):
+if st.button("Test Gemini API"):
 
     try:
 
@@ -588,7 +588,7 @@ if st.button("Test Reader Agent"):
             f"Reader Agent failed: {type(e).__name__}: {str(e)}"
         )
 
-        st.code(traceback.format_exc())''''
+        st.code(traceback.format_exc())
 
 
 # ----------------------------------------------------------------------------
