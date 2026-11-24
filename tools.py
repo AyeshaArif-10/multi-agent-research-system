@@ -37,7 +37,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-from ddgs import DDGS
+
 
 
 def web_search(query: str) -> str:
