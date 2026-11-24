@@ -126,11 +126,12 @@ def run_research_pipeline(topic: str) -> dict:
 
         print("\nSEARCH RESULTS:\n", state["search_results"], flush=True)
 
-    except Exception:
-        print("\nERROR IN SEARCH AGENT:", flush=True)
-        traceback.print_exc()
-        return {"error": "Search Agent failed."}
-
+    except Exception as e:
+    print("\nERROR IN SEARCH AGENT:", flush=True)
+    traceback.print_exc()
+    return {
+        "error": f"Search Agent failed: {type(e).__name__}: {str(e)}"
+    }
     # STEP 2: READER AGENT
     try:
         print("\n" + "=" * 50, flush=True)
