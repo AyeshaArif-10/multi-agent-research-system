@@ -408,26 +408,33 @@ if st.button("Test DuckDuckGo Search"):
             f"Search failed: {type(e).__name__}: {str(e)}"
         )
 
+
 if st.button("Test Search Agent"):
     try:
-        with st.spinner("Testing Search Agent..."):
-            search_agent = build_search_agent()
+        search_agent = build_search_agent()
 
-            result = search_agent.invoke(
+        with st.spinner("Inspecting Search Agent execution..."):
+            for step in search_agent.stream(
                 {
                     "messages": [
-                        ("user", "Search for recent developments in artificial intelligence.")
+                        (
+                            "user",
+                            "Search for recent developments in artificial intelligence."
+                        )
                     ]
                 },
-                config={"recursion_limit": 5}
-            )
+                config={"recursion_limit": 10},
+                stream_mode="updates"
+            ):
+                st.write("Execution step:")
+                st.write(step)
 
-        st.success("Search Agent completed!")
-        st.write(result)
+        st.success("Search Agent execution finished!")
 
     except Exception as e:
         st.error(f"Search Agent failed: {type(e).__name__}: {str(e)}")
         st.code(traceback.format_exc())
+
 # ----------------------------------------------------------------------------
 # RESEARCH FORM
 # ----------------------------------------------------------------------------
