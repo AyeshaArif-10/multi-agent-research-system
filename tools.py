@@ -1,29 +1,61 @@
+```python
 from ddgs import DDGS
 import requests
 from bs4 import BeautifulSoup
 
 
-def web_search(query: str) -> str:
+def web_search(query: str = None, queries: list = None) -> str:
     """Search the web and return relevant titles, URLs, and snippets."""
 
     try:
-        results = DDGS().text(
-            query,
-            max_results=5,
-            backend="auto"
-        )
+        search_queries = []
 
-        if not results:
-            return "No search results found. Try a more specific query."
+        if query:
+            search_queries.append(query)
+
+        if queries:
+            search_queries.extend(queries)
+
+        if not search_queries:
+            return "No search query provided."
 
         output = []
+        seen_urls = set()
 
-        for result in results:
-            output.append(
-                f"Title: {result.get('title', 'No title')}\n"
-                f"URL: {result.get('href', 'No URL')}\n"
-                f"Snippet: {result.get('body', 'No description')}"
-            )
+        with DDGS() as ddgs:
+            for search_query in search_queries[:2]:
+
+                results = ddgs.text(
+                    search_query,
+                    max_results=5,
+                    backend="auto"
+                )
+
+                if not results:
+                    continue
+
+                for result in results:
+                    url = result.get("href", "No URL")
+
+                    if url in seen_urls:
+                        continue
+
+                    seen_urls.add(url)
+
+                    output.append(
+                        f"Title: {result.get('title', 'No title')}\n"
+                        f"URL: {url}\n"
+                        f"Snippet: {result.get('body', 'No description')}"
+                    )
+
+                    if len(output) >= 5:
+                        break
+
+                if len(output) >= 5:
+                    break
+
+        if not output:
+            return "No search results found. Try a different search query."
 
         return "\n\n".join(output)
 
@@ -54,4 +86,4 @@ def scrape_url(url: str) -> str:
 
     except Exception as e:
         return f"Webpage reading failed: {str(e)}"
-
+```
