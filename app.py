@@ -434,7 +434,30 @@ if st.button("Test Search Agent"):
     except Exception as e:
         st.error(f"Search Agent failed: {type(e).__name__}: {str(e)}")
         st.code(traceback.format_exc())
+if st.button("Test Reader Agent"):
+    try:
+        with st.spinner("Testing Reader Agent..."):
+            reader_agent = build_reader_agent()
 
+            result = reader_agent.invoke(
+                {
+                    "messages": [
+                        (
+                            "user",
+                            "Visit this URL and extract its important information: "
+                            "https://www.ibm.com/think/news/ai-tech-trends-2026"
+                        )
+                    ]
+                },
+                config={"recursion_limit": 10}
+            )
+
+        st.success("Reader Agent completed!")
+        st.write(result)
+
+    except Exception as e:
+        st.error(f"Reader Agent failed: {type(e).__name__}: {str(e)}")
+        st.code(traceback.format_exc())
 # ----------------------------------------------------------------------------
 # RESEARCH FORM
 # ----------------------------------------------------------------------------
